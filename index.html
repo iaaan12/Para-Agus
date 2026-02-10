@@ -9,8 +9,8 @@
     <meta name="description" content="Un mensaje especial para alguien increíble.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Elegant Typography: Cormorant Garamond for cinematic touch and Inter for readability -->
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@200;300;400&display=swap" rel="stylesheet">
+    <!-- Elegant Typography: Cormorant Garamond, Inter, and Romantic Dancing Script -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@200;300;400&family=Dancing+Script:wght@500&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -21,6 +21,8 @@
             --transition-cinematic: 2.2s cubic-bezier(0.22, 1, 0.36, 1);
             --font-cinematic: 'Cormorant Garamond', serif;
             --font-modern: 'Inter', sans-serif;
+            --font-romantic: 'Dancing Script', cursive;
+            --accent-pink: #ffe6f0;
         }
 
         /* --- GLOBAL RESET & FADE IN --- */
@@ -128,12 +130,15 @@
         }
 
         /* TIPOGRAFÍA ESPECIAL MENSAJES */
-        #message-section p {
+        #message-section p, #counter-section .counter-label, #counter-section .counter-footer {
             font-family: var(--font-cinematic);
-            font-size: clamp(1.3rem, 4.5vw, 2rem);
             font-weight: 300;
             line-height: 1.5;
             color: rgba(255, 255, 255, 0.8);
+        }
+
+        #message-section p {
+            font-size: clamp(1.3rem, 4.5vw, 2rem);
             margin-bottom: 2.5rem;
         }
 
@@ -200,11 +205,12 @@
 
         /* --- IMAGE SECTION --- */
         .photo-wrapper {
+            position: relative;
             width: 100%;
             max-width: 550px;
             margin: 0 auto 3.5rem;
             border-radius: 2px;
-            overflow: hidden;
+            overflow: visible; /* Changed to visible to allow arrow overflow */
             box-shadow: 0 40px 80px rgba(0,0,0,0.8);
             transition: 2.5s cubic-bezier(0.22, 1, 0.36, 1);
             transform: scale(0.9) translateY(30px);
@@ -223,6 +229,7 @@
             height: auto;
             display: block;
             transition: 4s ease;
+            border-radius: 2px;
         }
         
         .photo-wrapper:hover img {
@@ -230,9 +237,138 @@
             filter: brightness(1.05);
         }
 
+        /* --- ROMANTIC ANNOTATION (ARROW) --- */
+        .romantic-annotation {
+            position: absolute;
+            top: 36%;
+            left: 55%;
+            transform: rotate(-15deg);
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1s ease 1.5s; /* Fade in after image settles */
+        }
+
+        .container.visible .romantic-annotation {
+            opacity: 1;
+            animation: float-annotation 2.5s infinite ease-in-out;
+        }
+
+        @keyframes float-annotation {
+            0%, 100% { transform: rotate(-15deg) translateY(0); }
+            50% { transform: rotate(-15deg) translateY(-6px); }
+        }
+
+        .romantic-arrow-svg {
+            width: 80px;
+            height: 40px;
+            overflow: visible;
+        }
+
+        .romantic-arrow-svg path {
+            fill: none;
+            stroke: var(--accent-pink);
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            filter: drop-shadow(0 0 4px rgba(255, 230, 240, 0.5));
+        }
+
+        .container.visible .romantic-arrow-svg path {
+            animation: draw-arrow 1.5s forwards ease-out 2s;
+        }
+
+        @keyframes draw-arrow {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .romantic-text {
+            font-family: var(--font-romantic);
+            color: var(--accent-pink);
+            font-size: clamp(24px, 4vw, 28px);
+            white-space: nowrap;
+            margin-top: -10px;
+            margin-right: -20px;
+            text-shadow: 0 0 10px rgba(255, 230, 240, 0.4), 1px 1px 2px rgba(0,0,0,0.5);
+            opacity: 0;
+            transform: translateY(5px);
+            transition: all 1s ease 2.8s;
+        }
+
+        .container.visible .romantic-text {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- COUNTER SECTION STYLES --- */
+        .counter-label {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            margin-bottom: 2.5rem;
+            opacity: 0.6;
+        }
+
+        .counter-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .counter-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 100px;
+        }
+
+        .counter-item span {
+            font-family: var(--font-cinematic);
+            font-size: clamp(2.5rem, 10vw, 4.5rem);
+            font-weight: 200;
+            line-height: 1;
+            letter-spacing: 0.05em;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255,255,255,0.1);
+        }
+
+        .counter-item label {
+            font-family: var(--font-modern);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-top: 0.5rem;
+            opacity: 0.4;
+        }
+
+        .counter-separator {
+            font-family: var(--font-cinematic);
+            font-size: 3rem;
+            font-weight: 200;
+            opacity: 0.15;
+            margin-bottom: 1.5rem;
+        }
+
+        .counter-footer {
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            font-style: italic;
+            margin-top: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         /* --- TEXT BLOCKS RHYTHM --- */
         .text-block {
-            margin-bottom: 9rem; /* Generous spacing */
+            margin-bottom: 9rem;
             opacity: 0;
             transform: translateY(40px);
             transition: 2.5s cubic-bezier(0.22, 1, 0.36, 1);
@@ -265,6 +401,13 @@
             section { padding: 2rem 1.5rem; }
             .text-block { margin-bottom: 6rem; }
             .btn { width: 100%; }
+            .counter-display { gap: 1rem; }
+            .counter-separator { display: none; }
+            .counter-item { min-width: 80px; }
+            .romantic-annotation {
+                left: 50%;
+                top: 34%;
+            }
         }
     </style>
 </head>
@@ -286,6 +429,14 @@
     <section id="photo-section">
         <div class="container">
             <div class="photo-wrapper">
+                <!-- ROMANTIC ANNOTATION -->
+                <div class="romantic-annotation">
+                    <svg class="romantic-arrow-svg" viewBox="0 0 100 50">
+                        <path d="M90,10 Q50,0 10,40 L18,30 M10,40 L22,42" />
+                    </svg>
+                    <span class="romantic-text">La más hermosa</span>
+                </div>
+                
                 <img 
                     src="fotofav.jpg" 
                     alt="Nuestro recuerdo favorito" 
@@ -308,7 +459,7 @@
             </div>
 
             <div class="text-block" data-type-effect="true">
-                <p>Nos conocimos en 2024, en una joda, fue lo mas inesperado pero sin saber que algo tan importante iba a empezar ahí.<br>Ese año fue raro… hablábamos, dejábamos de hablar, nada serio.<br>Como si la vida estuviera probándonos.</p>
+                <p>Nos conocimos en 2024, en una joda, fue lo mas inesperado pero sin saber que algo tan importante iba a empezar ahí.<br>Ese año fue raro… habláábamos, dejábamos de hablar, nada serio.<br>Como si la vida estuviera probándonos.</p>
             </div>
 
             <div class="text-block" data-type-effect="true">
@@ -348,9 +499,39 @@
             <div class="text-block" data-type-effect="true" style="margin-bottom: 2rem;">
                 <p style="font-style: italic; font-weight: 300; opacity: 1;">"Porque no hay cuadro que alcance<br>para todo lo que siento por vos."</p>
                 <p style="margin-top: 1rem; opacity: 0.6;">Y gracias… por quedarte.</p>
-                <button class="btn" onclick="handleBtnClick(this, 'final')">Última cosa</button>
+                <button class="btn" onclick="handleBtnClick(this, 'counter-section')">Siguiente paso</button>
             </div>
 
+        </div>
+    </section>
+
+    <!-- SECTION 4: REAL-TIME COUNTER -->
+    <section id="counter-section">
+        <div class="container">
+            <p class="counter-label">Desde que volvimos a elegirnos…</p>
+            
+            <div class="counter-display">
+                <div class="counter-item">
+                    <span id="days">00</span>
+                    <label>Días</label>
+                </div>
+                <div class="counter-separator">|</div>
+                <div class="counter-item">
+                    <span id="hours">00</span>
+                    <label>Horas</label>
+                </div>
+                <div class="counter-separator">|</div>
+                <div class="counter-item">
+                    <span id="minutes">00</span>
+                    <label>Minutos</label>
+                </div>
+            </div>
+
+            <p class="counter-footer">
+                “Y cada día confirmo que fue la mejor decisión.”
+            </p>
+
+            <button class="btn" onclick="handleBtnClick(this, 'final')">Última cosa</button>
         </div>
     </section>
 
@@ -404,13 +585,31 @@
                 if (star.x < 0) star.x = canvas.width;
                 if (star.x > canvas.width) star.x = 0;
 
-                // Subtle twinkling
                 star.opacity += (Math.random() - 0.5) * 0.01;
                 if (star.opacity < 0.05) star.opacity = 0.05;
                 if (star.opacity > 0.4) star.opacity = 0.4;
             });
             requestAnimationFrame(drawStars);
         }
+
+        // --- REAL-TIME COUNTER LOGIC ---
+        const startDate = new Date('April 27, 2025 00:00:00').getTime();
+
+        function updateCounter() {
+            const now = new Date().getTime();
+            const diff = Math.abs(now - startDate);
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+            document.getElementById('days').textContent = d.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = h.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = m.toString().padStart(2, '0');
+        }
+
+        setInterval(updateCounter, 1000);
+        updateCounter(); // Initial call
 
         // --- CINEMATIC SMOOTH SCROLL ---
         function cinematicScrollTo(targetY, duration = 2400) {
@@ -464,7 +663,6 @@
                 const text = node.textContent;
                 for (let i = 0; i < text.length; i++) {
                     parent.appendChild(document.createTextNode(text[i]));
-                    // Variar velocidad para que parezca más orgánico
                     const delay = text[i] === ',' || text[i] === '.' ? 250 : 35;
                     await new Promise(resolve => setTimeout(resolve, delay));
                 }
@@ -490,7 +688,6 @@
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
                     if (entry.target.classList.contains('text-block')) {
-                        // Delay typing until the container is somewhat visible
                         setTimeout(() => {
                             entry.target.classList.add('show');
                             if (entry.target.dataset.typeEffect === 'true') typeWriter(entry.target);
@@ -509,14 +706,12 @@
             document.querySelectorAll('.container').forEach(c => revealObserver.observe(c));
             document.querySelectorAll('.text-block').forEach(b => revealObserver.observe(b));
             
-            // Hero entry
             setTimeout(() => {
                 const hero = document.getElementById('hero-container');
                 if (hero) hero.classList.add('visible');
             }, 1000);
         });
 
-        // Mouse parallax for subtle depth
         if (window.innerWidth > 1024) {
             window.addEventListener('mousemove', (e) => {
                 const x = (e.clientX / window.innerWidth) - 0.5;
