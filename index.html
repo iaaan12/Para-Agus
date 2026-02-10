@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Vos</title>
+    <!-- SEO & Favicon -->
+    <meta name="description" content="Un mensaje especial para alguien increíble.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Elegant Typography: Cormorant Garamond for cinematic touch and Inter for readability -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@200;300;400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0f0f14;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --accent-glow: rgba(255, 255, 255, 0.15);
+            --transition-slow: 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+            --font-cinematic: 'Cormorant Garamond', serif;
+            --font-modern: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            /* Desactivamos el scroll behavior nativo para usar nuestra lógica personalizada */
+            scroll-behavior: auto;
+            background-color: var(--bg-color);
+        }
+
+        body {
+            font-family: var(--font-modern);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- BACKGROUND PARTICLES --- */
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* --- LAYOUT --- */
+        section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: var(--transition-slow);
+        }
+
+        .container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1 {
+            font-family: var(--font-cinematic);
+            font-weight: 300;
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            margin-bottom: 2rem;
+            letter-spacing: 0.05em;
+            filter: blur(8px);
+            transition: 2.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .container.visible h1 {
+            filter: blur(0);
+        }
+
+        p {
+            font-weight: 200;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        /* EFECTO ESPECIAL PARA PALABRAS RESALTADAS */
+        .highlight {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.4);
+            font-weight: 500;
+            transition: all 0.5s ease;
+            display: inline-block;
+            animation: highlight-breathe 4s infinite ease-in-out;
+            position: relative;
+        }
+
+        @keyframes highlight-breathe {
+            0%, 100% {
+                transform: scale(1);
+                text-shadow: 0 0 10px rgba(255,255,255,0.4);
+            }
+            50% {
+                transform: scale(1.06);
+                text-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 30px rgba(255,255,255,0.1);
+            }
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-primary);
+            padding: 1.2rem 3rem;
+            font-family: var(--font-modern);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+
+        .btn:hover {
+            border-color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.03);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+            transform: translateY(-3px);
+            letter-spacing: 0.3em;
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* MICROINTERACCIÓN DE PULSO Y DESVANECIMIENTO */
+        @keyframes btn-pulse-out {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5);
+                opacity: 1;
+                filter: brightness(1);
+            }
+            30% {
+                transform: scale(1.1);
+                box-shadow: 0 0 50px 15px rgba(255, 255, 255, 0.3);
+                filter: brightness(1.5);
+            }
+            100% {
+                transform: scale(0.8);
+                box-shadow: 0 0 80px 30px rgba(255, 255, 255, 0);
+                opacity: 0;
+                filter: brightness(2);
+            }
+        }
+
+        .btn-clicked {
+            animation: btn-pulse-out 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+            pointer-events: none;
+        }
+
+        /* --- IMAGE SECTION --- */
+        .photo-wrapper {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 2.5rem;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+            transition: 1.8s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: scale(0.92);
+            filter: grayscale(40%) contrast(0.9);
+        }
+
+        .container.visible .photo-wrapper {
+            transform: scale(1);
+            filter: grayscale(0%) contrast(1);
+        }
+
+        .photo-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: #16161d;
+            min-height: 350px;
+            transition: 3s ease;
+        }
+        
+        .photo-wrapper:hover img {
+            transform: scale(1.05);
+        }
+
+        /* --- MESSAGE SECTION BLOCKS --- */
+        .text-block {
+            margin-bottom: 6rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: var(--transition-slow);
+        }
+
+        .text-block.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- FINAL SECTION --- */
+        .final-text {
+            font-family: var(--font-cinematic);
+            font-size: clamp(2rem, 8vw, 4.5rem);
+            animation: breathe-final 6s infinite ease-in-out;
+            letter-spacing: 0.12em;
+            font-weight: 300;
+            margin-bottom: 3rem;
+        }
+
+        @keyframes breathe-final {
+            0%, 100% { transform: scale(1); opacity: 0.7; filter: blur(2px); }
+            50% { transform: scale(1.03); opacity: 1; filter: blur(0px); }
+        }
+
+        /* --- RESPONSIVE ADJUSTMENTS --- */
+        @media (max-width: 768px) {
+            section {
+                padding: 1.5rem;
+            }
+            .btn {
+                width: 100%;
+                padding: 1.1rem 1.5rem;
+            }
+            .text-block {
+                margin-bottom: 4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="starfield"></canvas>
+
+    <!-- HERO SECTION -->
+    <section id="hero">
+        <div class="container" id="hero-container">
+            <h1>Si estás leyendo esto, quiero expresarte todo lo que no siempre puedo…</h1>
+            <button class="btn" onclick="handleBtnClick(this, 'photo-section')">Seguir</button>
+        </div>
+    </section>
+
+    <!-- SECTION 2: PHOTO -->
+    <section id="photo-section">
+        <div class="container">
+            <div class="photo-wrapper">
+                <img 
+                    src="fotofav.jpg" 
+                    alt="Nuestro recuerdo favorito" 
+                    loading="lazy"
+                >
+            </div>
+            <p>"Cada foto con vos es uno de los recuerdos mas lindos, y esta foto es mi favorita."</p>
+            <button class="btn" onclick="handleBtnClick(this, 'message-section')">Te digo lo que no entra en un cuadro</button>
+        </div>
+    </section>
+
+    <!-- SECTION 3: EMOTIONAL MESSAGE -->
+    <section id="message-section">
+        <div class="container">
+            
+            <div class="text-block" data-type-effect="true">
+                <p>No sé si alguna vez entendés lo que generás en mí.<br>Porque a veces ni yo sé cómo explicarlo.</p>
+            </div>
+
+            <div class="text-block" data-type-effect="true">
+                <p>Nos conocimos en 2024, en una joda, fue lo mas inesperado pero sin saber que algo tan importante iba a empezar ahí.<br>Ese año fue raro… hablábamos, dejábamos de hablar, nada serio.<br>Como si la vida estuviera probándonos.</p>
+            </div>
+
+            <div class="text-block" data-type-effect="true">
+                <p>Hasta que en <span class="highlight">abril</span>, volvimos a hablar todos los días.<br>Y ahí fue distinto.<br>Más real. Más sentimental.</p>
+            </div>
+
+            <div class="text-block" data-type-effect="true">
+                <p>Tuvimos problemas. Malentendidos.<br>Momentos que podrían habernos separado.</p>
+                <p class="highlight">Pero no lo hicieron.</p>
+            </div>
+
+            <div class="text-block" data-type-effect="true">
+                <p>Porque cada vez que algo se rompía, elegíamos arreglarlo.<br>Cada vez que algo dolía, elegíamos hablarlo.<br>Y eso para mí vale más que cualquier comienzo perfecto.</p>
+            </div>
+
+            <div class="text-block" data-type-effect="true">
+                <p>Yo no quiero algo que sea fácil.<br>Quiero algo que sea <span class="highlight">verdadero</span>.<br>Y lo nuestro lo es.</p>
+            </div>
+
+            <div class="text-block" data-type-effect="true">
+                <p>Te elijo después de las dudas.<br>Te elijo después de los errores.<br>Te elijo después de haber probado lo que es casi perderte.</p>
+            </div>
+
+            <div class="text-block" data-type-effect="true">
+                <p>Porque si algo entendí desde abril,<br>es que cuando estás en mi vida, todo tiene más sentido.</p>
+            </div>
+
+            <div class="text-block" data-type-effect="true">
+                <p>Y si alguna vez dudás de lo que significás para mí, acordate de algo:</p>
+                <p>Nos pudimos haber quedado en ese 2024.<br>Nos pudimos haber quedado en el “casi”.<br><span class="highlight">Pero no lo hicieron.</span></p>
+            </div>
+
+            <div class="text-block" data-type-effect="true">
+                <p>Volvimos. Y nos elegimos.<br><span class="highlight">Y yo te sigo eligiendo.</span></p>
+            </div>
+
+            <div class="text-block" data-type-effect="true">
+                <p style="font-style: italic; opacity: 0.9;">"Porque no hay cuadro que alcance<br>para todo lo que siento por vos."</p>
+                <p style="margin-top: 1rem;">Y gracias…<br>por quedarte.</p>
+                <button class="btn" onclick="handleBtnClick(this, 'final')">Última cosa</button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FINAL SECTION -->
+    <section id="final">
+        <div class="container">
+            <h1 class="final-text">Te amo mucho gordita.</h1>
+            <button class="btn" onclick="handleBtnRestart(this)">Reiniciar camino</button>
+        </div>
+    </section>
+
+    <script>
+        // --- STARFIELD LOGIC (Optimized) ---
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        const STAR_COUNT = window.innerWidth < 768 ? 40 : 100;
+
+        function initStars() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            stars = [];
+            for (let i = 0; i < STAR_COUNT; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 1.5,
+                    speed: Math.random() * 0.04 + 0.02,
+                    opacity: Math.random()
+                });
+            }
+        }
+
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ffffff';
+            
+            stars.forEach(star => {
+                ctx.globalAlpha = star.opacity;
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                star.y -= star.speed;
+                if (star.y < 0) {
+                    star.y = canvas.height;
+                    star.x = Math.random() * canvas.width;
+                }
+
+                star.opacity += (Math.random() - 0.5) * 0.015;
+                if (star.opacity < 0.1) star.opacity = 0.1;
+                if (star.opacity > 0.7) star.opacity = 0.7;
+            });
+            requestAnimationFrame(drawStars);
+        }
+
+        // --- CINEMATIC SMOOTH SCROLL ---
+        function cinematicScrollTo(targetY, duration = 1800) {
+            const startY = window.pageYOffset;
+            const diff = targetY - startY;
+            let start = null;
+
+            const easing = (t) => t < .5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+
+            function step(timestamp) {
+                if (!start) start = timestamp;
+                const progress = timestamp - start;
+                const percent = Math.min(progress / duration, 1);
+                
+                window.scrollTo(0, startY + diff * easing(percent));
+
+                if (progress < duration) {
+                    window.requestAnimationFrame(step);
+                }
+            }
+            window.requestAnimationFrame(step);
+        }
+
+        function scrollToId(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                const targetY = el.getBoundingClientRect().top + window.pageYOffset;
+                cinematicScrollTo(targetY);
+            }
+        }
+
+        // --- BUTTON HANDLERS ---
+        function handleBtnClick(btn, targetId) {
+            btn.classList.add('btn-clicked');
+            setTimeout(() => {
+                scrollToId(targetId);
+            }, 500);
+        }
+
+        function handleBtnRestart(btn) {
+            btn.classList.add('btn-clicked');
+            setTimeout(() => {
+                cinematicScrollTo(0, 2500);
+                // Opcional: reiniciar estado de los textos para volver a ver el typing
+                setTimeout(() => {
+                    location.reload(); // Forma más limpia de reiniciar toda la experiencia visual
+                }, 2600);
+            }, 600);
+        }
+
+        // --- SELECTIVE TYPING EFFECT LOGIC ---
+        async function typeWriter(element) {
+            if (element.getAttribute('data-typed') === 'true') return;
+            element.setAttribute('data-typed', 'true');
+            
+            const originalContent = element.innerHTML;
+            element.innerHTML = '';
+            
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = originalContent;
+            const nodes = Array.from(tempDiv.childNodes);
+            
+            for (const node of nodes) {
+                await processNode(element, node);
+            }
+        }
+
+        async function processNode(parent, node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                parent.appendChild(document.createTextNode(node.textContent));
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                const newElement = document.createElement(node.tagName);
+                Array.from(node.attributes).forEach(attr => newElement.setAttribute(attr.name, attr.value));
+                parent.appendChild(newElement);
+                
+                if (newElement.classList.contains('highlight')) {
+                    const textContent = node.textContent;
+                    newElement.textContent = ''; 
+                    for (let i = 0; i < textContent.length; i++) {
+                        newElement.textContent += textContent[i];
+                        await new Promise(resolve => setTimeout(resolve, 60));
+                    }
+                } else {
+                    if (node.tagName === 'BR') {
+                        await new Promise(resolve => setTimeout(resolve, 150));
+                    } else {
+                        const children = Array.from(node.childNodes);
+                        for (const child of children) {
+                            await processNode(newElement, child);
+                        }
+                    }
+                }
+            }
+        }
+
+        // --- INTERSECTION OBSERVER ---
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    if (entry.target.classList.contains('text-block')) {
+                        entry.target.classList.add('show');
+                        if (entry.target.dataset.typeEffect === 'true') {
+                            typeWriter(entry.target);
+                        }
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // --- INITIALIZATION ---
+        window.addEventListener('resize', initStars);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initStars();
+            drawStars();
+
+            document.querySelectorAll('.container').forEach(c => revealObserver.observe(c));
+            document.querySelectorAll('.text-block').forEach(b => revealObserver.observe(b));
+
+            setTimeout(() => {
+                document.getElementById('hero-container').classList.add('visible');
+            }, 400);
+        });
+
+        // Simple Parallax
+        if (window.innerWidth > 1024) {
+            window.addEventListener('mousemove', (e) => {
+                const x = (e.clientX / window.innerWidth) - 0.5;
+                const y = (e.clientY / window.innerHeight) - 0.5;
+                
+                document.querySelectorAll('.container.visible').forEach(container => {
+                    container.style.transform = `translate(${x * 12}px, ${y * 12}px)`;
+                });
+            });
+        }
+    </script>
+</body>
+</html>
