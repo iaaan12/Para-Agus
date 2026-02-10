@@ -14,15 +14,16 @@
     
     <style>
         :root {
-            --bg-color: #0f0f14;
+            --bg-color: #08080a;
             --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.7);
-            --accent-glow: rgba(255, 255, 255, 0.15);
-            --transition-slow: 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --accent-glow: rgba(255, 255, 255, 0.1);
+            --transition-cinematic: 2.2s cubic-bezier(0.22, 1, 0.36, 1);
             --font-cinematic: 'Cormorant Garamond', serif;
             --font-modern: 'Inter', sans-serif;
         }
 
+        /* --- GLOBAL RESET & FADE IN --- */
         * {
             margin: 0;
             padding: 0;
@@ -30,29 +31,53 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        html {
-            scroll-behavior: auto;
-            background-color: var(--bg-color);
-        }
-
         body {
-            font-family: var(--font-modern);
             background-color: var(--bg-color);
             color: var(--text-primary);
+            font-family: var(--font-modern);
             overflow-x: hidden;
-            line-height: 1.6;
+            line-height: 1.8;
             -webkit-font-smoothing: antialiased;
+            opacity: 0; /* Initial fade-in state */
+            animation: initial-fade 3s forwards ease-in-out;
         }
 
-        /* --- BACKGROUND PARTICLES --- */
+        @keyframes initial-fade {
+            0% { opacity: 0; background-color: #000; }
+            100% { opacity: 1; }
+        }
+
+        /* --- CINEMATIC GRAIN & VIGNETTE --- */
+        .grain-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10;
+            pointer-events: none;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .vignette {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 5;
+            pointer-events: none;
+            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.6) 100%);
+        }
+
+        /* --- BACKGROUND ANIMATION --- */
         #starfield {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
             pointer-events: none;
+            transition: transform 10s ease-out;
+            animation: bg-breathe 25s infinite ease-in-out;
+        }
+
+        @keyframes bg-breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
         }
 
         /* --- LAYOUT --- */
@@ -62,17 +87,17 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 2rem;
+            padding: 4rem 2rem;
             position: relative;
             text-align: center;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 850px;
             width: 100%;
             opacity: 0;
-            transform: translateY(40px);
-            transition: var(--transition-slow);
+            transform: translateY(60px);
+            transition: var(--transition-cinematic);
         }
 
         .container.visible {
@@ -84,11 +109,11 @@
         h1 {
             font-family: var(--font-cinematic);
             font-weight: 300;
-            font-size: clamp(1.8rem, 5vw, 3rem);
-            margin-bottom: 2rem;
-            letter-spacing: 0.05em;
-            filter: blur(8px);
-            transition: 2.5s cubic-bezier(0.22, 1, 0.36, 1);
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            margin-bottom: 2.5rem;
+            letter-spacing: 0.08em;
+            filter: blur(10px);
+            transition: 3s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .container.visible h1 {
@@ -97,117 +122,120 @@
 
         p {
             font-weight: 200;
-            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-size: clamp(1rem, 3.5vw, 1.25rem);
             color: var(--text-secondary);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
         }
 
-        /* TIPOGRAFÍA ESPECIAL PARA LA SECCIÓN DE MENSAJES (PETICIÓN USUARIO) */
+        /* TIPOGRAFÍA ESPECIAL MENSAJES */
         #message-section p {
             font-family: var(--font-cinematic);
-            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            font-size: clamp(1.3rem, 4.5vw, 2rem);
             font-weight: 300;
-            line-height: 1.4;
-            letter-spacing: 0.02em;
-            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2.5rem;
         }
 
-        /* EFECTO ESPECIAL PARA PALABRAS RESALTADAS */
         .highlight {
             color: #fff;
-            text-shadow: 0 0 10px rgba(255,255,255,0.4);
-            font-weight: 500;
-            transition: all 0.5s ease;
+            text-shadow: 0 0 15px rgba(255,255,255,0.3);
+            font-weight: 400;
             display: inline-block;
-            animation: highlight-breathe 4s infinite ease-in-out;
-            position: relative;
+            animation: highlight-pulse 5s infinite ease-in-out;
         }
 
-        @keyframes highlight-breathe {
-            0%, 100% {
-                transform: scale(1);
-                text-shadow: 0 0 10px rgba(255,255,255,0.4);
-            }
-            50% {
-                transform: scale(1.06);
-                text-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 30px rgba(255,255,255,0.1);
-            }
+        @keyframes highlight-pulse {
+            0%, 100% { text-shadow: 0 0 15px rgba(255,255,255,0.3); transform: scale(1); }
+            50% { text-shadow: 0 0 25px rgba(255,255,255,0.6), 0 0 40px rgba(255,255,255,0.1); transform: scale(1.02); }
         }
 
         /* --- BUTTONS --- */
         .btn {
             background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: var(--text-primary);
-            padding: 1.2rem 3rem;
+            padding: 1.2rem 3.5rem;
             font-family: var(--font-modern);
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 0.25em;
+            letter-spacing: 0.35em;
             cursor: pointer;
-            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-            margin-top: 2rem;
+            transition: all 0.8s var(--transition-cinematic);
+            margin-top: 3rem;
+            border-radius: 2px;
             position: relative;
             overflow: hidden;
-            border-radius: 4px;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: 0.8s;
         }
 
         .btn:hover {
-            border-color: rgba(255, 255, 255, 0.9);
-            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.8);
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
-            transform: translateY(-3px);
-            letter-spacing: 0.3em;
+            letter-spacing: 0.45em;
+            transform: translateY(-2px);
+        }
+
+        .btn:hover::after {
+            left: 100%;
         }
 
         .btn-clicked {
-            animation: btn-pulse-out 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+            animation: btn-pulse-out 1s forwards !important;
             pointer-events: none;
         }
 
         @keyframes btn-pulse-out {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5); opacity: 1; }
-            30% { transform: scale(1.1); box-shadow: 0 0 50px 15px rgba(255, 255, 255, 0.3); }
-            100% { transform: scale(0.8); box-shadow: 0 0 80px 30px rgba(255, 255, 255, 0); opacity: 0; }
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0; filter: blur(5px); }
         }
 
         /* --- IMAGE SECTION --- */
         .photo-wrapper {
             width: 100%;
-            max-width: 500px;
-            margin: 0 auto 2.5rem;
-            border-radius: 4px;
+            max-width: 550px;
+            margin: 0 auto 3.5rem;
+            border-radius: 2px;
             overflow: hidden;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-            transition: 1.8s cubic-bezier(0.22, 1, 0.36, 1);
-            transform: scale(0.92);
-            filter: grayscale(40%) contrast(0.9);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.8);
+            transition: 2.5s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: scale(0.9) translateY(30px);
+            filter: grayscale(30%) contrast(0.9);
+            opacity: 0;
         }
 
         .container.visible .photo-wrapper {
-            transform: scale(1);
+            transform: scale(1) translateY(0);
             filter: grayscale(0%) contrast(1);
+            opacity: 1;
         }
 
         .photo-wrapper img {
             width: 100%;
             height: auto;
             display: block;
-            background: #16161d;
-            min-height: 350px;
-            transition: 3s ease;
+            transition: 4s ease;
         }
         
         .photo-wrapper:hover img {
-            transform: scale(1.05);
+            transform: scale(1.03);
+            filter: brightness(1.05);
         }
 
-        /* --- MESSAGE SECTION BLOCKS --- */
+        /* --- TEXT BLOCKS RHYTHM --- */
         .text-block {
-            margin-bottom: 6rem;
+            margin-bottom: 9rem; /* Generous spacing */
             opacity: 0;
-            transform: translateY(30px);
-            transition: var(--transition-slow);
+            transform: translateY(40px);
+            transition: 2.5s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .text-block.show {
@@ -215,32 +243,35 @@
             transform: translateY(0);
         }
 
-        /* --- FINAL SECTION --- */
+        /* --- FINAL SECTION (DEVASTATING CLOSURE) --- */
         .final-text {
             font-family: var(--font-cinematic);
-            font-size: clamp(2rem, 8vw, 4.5rem);
-            animation: breathe-final 6s infinite ease-in-out;
-            letter-spacing: 0.12em;
+            font-size: clamp(2.5rem, 10vw, 5.5rem);
             font-weight: 300;
-            margin-bottom: 3rem;
+            letter-spacing: 0.15em;
+            color: #fff;
+            text-shadow: 0 0 40px rgba(255,255,255,0.2);
+            animation: final-breathing 8s infinite ease-in-out;
+            opacity: 0.9;
         }
 
-        @keyframes breathe-final {
-            0%, 100% { transform: scale(1); opacity: 0.7; filter: blur(2px); }
-            50% { transform: scale(1.03); opacity: 1; filter: blur(0px); }
+        @keyframes final-breathing {
+            0%, 100% { transform: scale(1); opacity: 0.8; filter: blur(1px); }
+            50% { transform: scale(1.02); opacity: 1; filter: blur(0); }
         }
 
-        /* --- RESPONSIVE ADJUSTMENTS --- */
+        /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
-            section { padding: 1.5rem; }
-            .btn { width: 100%; padding: 1.1rem 1.5rem; }
-            .text-block { margin-bottom: 4rem; }
-            #message-section p { font-size: clamp(1.1rem, 5vw, 1.4rem); }
+            section { padding: 2rem 1.5rem; }
+            .text-block { margin-bottom: 6rem; }
+            .btn { width: 100%; }
         }
     </style>
 </head>
 <body>
 
+    <div class="grain-overlay"></div>
+    <div class="vignette"></div>
     <canvas id="starfield"></canvas>
 
     <!-- HERO SECTION -->
@@ -261,7 +292,9 @@
                     loading="lazy"
                 >
             </div>
-            <p>"Cada foto con vos es uno de los recuerdos mas lindos, y esta foto es mi favorita."</p>
+            <p style="font-style: italic; opacity: 0.7; font-family: var(--font-cinematic); font-size: 1.4rem;">
+                "Cada foto con vos es uno de los recuerdos mas lindos, y esta foto es mi favorita."
+            </p>
             <button class="btn" onclick="handleBtnClick(this, 'message-section')">Te digo lo que no entra en un cuadro</button>
         </div>
     </section>
@@ -275,7 +308,7 @@
             </div>
 
             <div class="text-block" data-type-effect="true">
-                <p>Nos conocimos en 2024, en una joda, fue lo mas inesperado pero sin saber que algo tan importante iba a empezar ahí.<br>Ese año fue raro… habláábamos, dejábamos de hablar, nada serio.<br>Como si la vida estuviera probándonos.</p>
+                <p>Nos conocimos en 2024, en una joda, fue lo mas inesperado pero sin saber que algo tan importante iba a empezar ahí.<br>Ese año fue raro… hablábamos, dejábamos de hablar, nada serio.<br>Como si la vida estuviera probándonos.</p>
             </div>
 
             <div class="text-block" data-type-effect="true">
@@ -309,12 +342,12 @@
             </div>
 
             <div class="text-block" data-type-effect="true">
-                <p>Volvimos. Y nos elegimos.<br><span class="highlight">Y yo te sigo eligiendo.</span></p>
+                <p><span class="highlight">Volvimos.</span> Y nos elegimos.<br><span class="highlight">Y yo te sigo eligiendo.</span></p>
             </div>
 
-            <div class="text-block" data-type-effect="true">
-                <p style="font-style: italic; opacity: 0.9;">"Porque no hay cuadro que alcance<br>para todo lo que siento por vos."</p>
-                <p style="margin-top: 1rem;">Y gracias…<br>por quedarte.</p>
+            <div class="text-block" data-type-effect="true" style="margin-bottom: 2rem;">
+                <p style="font-style: italic; font-weight: 300; opacity: 1;">"Porque no hay cuadro que alcance<br>para todo lo que siento por vos."</p>
+                <p style="margin-top: 1rem; opacity: 0.6;">Y gracias… por quedarte.</p>
                 <button class="btn" onclick="handleBtnClick(this, 'final')">Última cosa</button>
             </div>
 
@@ -329,11 +362,11 @@
     </section>
 
     <script>
-        // --- STARFIELD LOGIC (Optimized) ---
+        // --- STARFIELD / DUST PARTICLES LOGIC ---
         const canvas = document.getElementById('starfield');
         const ctx = canvas.getContext('2d');
         let stars = [];
-        const STAR_COUNT = window.innerWidth < 768 ? 40 : 100;
+        const STAR_COUNT = window.innerWidth < 768 ? 50 : 120;
 
         function initStars() {
             canvas.width = window.innerWidth;
@@ -343,9 +376,10 @@
                 stars.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    size: Math.random() * 1.5,
-                    speed: Math.random() * 0.04 + 0.02,
-                    opacity: Math.random()
+                    size: Math.random() * 1.8,
+                    speed: Math.random() * 0.05 + 0.01,
+                    opacity: Math.random() * 0.5,
+                    drift: (Math.random() - 0.5) * 0.2
                 });
             }
         }
@@ -361,20 +395,25 @@
                 ctx.fill();
                 
                 star.y -= star.speed;
+                star.x += star.drift;
+
                 if (star.y < 0) {
                     star.y = canvas.height;
                     star.x = Math.random() * canvas.width;
                 }
+                if (star.x < 0) star.x = canvas.width;
+                if (star.x > canvas.width) star.x = 0;
 
-                star.opacity += (Math.random() - 0.5) * 0.015;
-                if (star.opacity < 0.1) star.opacity = 0.1;
-                if (star.opacity > 0.7) star.opacity = 0.7;
+                // Subtle twinkling
+                star.opacity += (Math.random() - 0.5) * 0.01;
+                if (star.opacity < 0.05) star.opacity = 0.05;
+                if (star.opacity > 0.4) star.opacity = 0.4;
             });
             requestAnimationFrame(drawStars);
         }
 
         // --- CINEMATIC SMOOTH SCROLL ---
-        function cinematicScrollTo(targetY, duration = 1800) {
+        function cinematicScrollTo(targetY, duration = 2400) {
             const startY = window.pageYOffset;
             const diff = targetY - startY;
             let start = null;
@@ -400,48 +439,47 @@
 
         function handleBtnClick(btn, targetId) {
             btn.classList.add('btn-clicked');
-            setTimeout(() => scrollToId(targetId), 500);
+            setTimeout(() => scrollToId(targetId), 600);
         }
 
-        function handleBtnRestart(btn) {
-            btn.classList.add('btn-clicked');
-            setTimeout(() => {
-                cinematicScrollTo(0, 2500);
-                setTimeout(() => location.reload(), 2600);
-            }, 600);
-        }
-
-        // --- SELECTIVE TYPING EFFECT LOGIC ---
+        // --- ORGANIC TYPING EFFECT ---
         async function typeWriter(element) {
             if (element.getAttribute('data-typed') === 'true') return;
             element.setAttribute('data-typed', 'true');
+            
             const originalContent = element.innerHTML;
             element.innerHTML = '';
+            
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = originalContent;
             const nodes = Array.from(tempDiv.childNodes);
-            for (const node of nodes) await processNode(element, node);
+            
+            for (const node of nodes) {
+                await processNode(element, node);
+            }
         }
 
         async function processNode(parent, node) {
             if (node.nodeType === Node.TEXT_NODE) {
-                parent.appendChild(document.createTextNode(node.textContent));
+                const text = node.textContent;
+                for (let i = 0; i < text.length; i++) {
+                    parent.appendChild(document.createTextNode(text[i]));
+                    // Variar velocidad para que parezca más orgánico
+                    const delay = text[i] === ',' || text[i] === '.' ? 250 : 35;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
             } else if (node.nodeType === Node.ELEMENT_NODE) {
                 const newElement = document.createElement(node.tagName);
                 Array.from(node.attributes).forEach(attr => newElement.setAttribute(attr.name, attr.value));
                 parent.appendChild(newElement);
-                if (newElement.classList.contains('highlight')) {
-                    const textContent = node.textContent;
-                    newElement.textContent = ''; 
-                    for (let i = 0; i < textContent.length; i++) {
-                        newElement.textContent += textContent[i];
-                        await new Promise(resolve => setTimeout(resolve, 60));
-                    }
-                } else if (node.tagName === 'BR') {
-                    await new Promise(resolve => setTimeout(resolve, 150));
+                
+                if (newElement.tagName === 'BR') {
+                    await new Promise(resolve => setTimeout(resolve, 400));
                 } else {
                     const children = Array.from(node.childNodes);
-                    for (const child of children) await processNode(newElement, child);
+                    for (const child of children) {
+                        await processNode(newElement, child);
+                    }
                 }
             }
         }
@@ -452,28 +490,39 @@
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
                     if (entry.target.classList.contains('text-block')) {
-                        entry.target.classList.add('show');
-                        if (entry.target.dataset.typeEffect === 'true') typeWriter(entry.target);
+                        // Delay typing until the container is somewhat visible
+                        setTimeout(() => {
+                            entry.target.classList.add('show');
+                            if (entry.target.dataset.typeEffect === 'true') typeWriter(entry.target);
+                        }, 400);
                     }
                 }
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.15 });
 
         window.addEventListener('resize', initStars);
+        
         document.addEventListener('DOMContentLoaded', () => {
             initStars();
             drawStars();
+            
             document.querySelectorAll('.container').forEach(c => revealObserver.observe(c));
             document.querySelectorAll('.text-block').forEach(b => revealObserver.observe(b));
-            setTimeout(() => document.getElementById('hero-container').classList.add('visible'), 400);
+            
+            // Hero entry
+            setTimeout(() => {
+                const hero = document.getElementById('hero-container');
+                if (hero) hero.classList.add('visible');
+            }, 1000);
         });
 
+        // Mouse parallax for subtle depth
         if (window.innerWidth > 1024) {
             window.addEventListener('mousemove', (e) => {
                 const x = (e.clientX / window.innerWidth) - 0.5;
                 const y = (e.clientY / window.innerHeight) - 0.5;
                 document.querySelectorAll('.container.visible').forEach(container => {
-                    container.style.transform = `translate(${x * 12}px, ${y * 12}px)`;
+                    container.style.transform = `translate(${x * 15}px, ${y * 15}px)`;
                 });
             });
         }
