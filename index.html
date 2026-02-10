@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -30,7 +31,6 @@
         }
 
         html {
-            /* Desactivamos el scroll behavior nativo para usar nuestra lógica personalizada */
             scroll-behavior: auto;
             background-color: var(--bg-color);
         }
@@ -102,6 +102,16 @@
             margin-bottom: 1.5rem;
         }
 
+        /* TIPOGRAFÍA ESPECIAL PARA LA SECCIÓN DE MENSAJES (PETICIÓN USUARIO) */
+        #message-section p {
+            font-family: var(--font-cinematic);
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            font-weight: 300;
+            line-height: 1.4;
+            letter-spacing: 0.02em;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
         /* EFECTO ESPECIAL PARA PALABRAS RESALTADAS */
         .highlight {
             color: #fff;
@@ -150,34 +160,15 @@
             letter-spacing: 0.3em;
         }
 
-        .btn:active {
-            transform: translateY(-1px);
-        }
-
-        /* MICROINTERACCIÓN DE PULSO Y DESVANECIMIENTO */
-        @keyframes btn-pulse-out {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5);
-                opacity: 1;
-                filter: brightness(1);
-            }
-            30% {
-                transform: scale(1.1);
-                box-shadow: 0 0 50px 15px rgba(255, 255, 255, 0.3);
-                filter: brightness(1.5);
-            }
-            100% {
-                transform: scale(0.8);
-                box-shadow: 0 0 80px 30px rgba(255, 255, 255, 0);
-                opacity: 0;
-                filter: brightness(2);
-            }
-        }
-
         .btn-clicked {
             animation: btn-pulse-out 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
             pointer-events: none;
+        }
+
+        @keyframes btn-pulse-out {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5); opacity: 1; }
+            30% { transform: scale(1.1); box-shadow: 0 0 50px 15px rgba(255, 255, 255, 0.3); }
+            100% { transform: scale(0.8); box-shadow: 0 0 80px 30px rgba(255, 255, 255, 0); opacity: 0; }
         }
 
         /* --- IMAGE SECTION --- */
@@ -241,16 +232,10 @@
 
         /* --- RESPONSIVE ADJUSTMENTS --- */
         @media (max-width: 768px) {
-            section {
-                padding: 1.5rem;
-            }
-            .btn {
-                width: 100%;
-                padding: 1.1rem 1.5rem;
-            }
-            .text-block {
-                margin-bottom: 4rem;
-            }
+            section { padding: 1.5rem; }
+            .btn { width: 100%; padding: 1.1rem 1.5rem; }
+            .text-block { margin-bottom: 4rem; }
+            #message-section p { font-size: clamp(1.1rem, 5vw, 1.4rem); }
         }
     </style>
 </head>
@@ -290,7 +275,7 @@
             </div>
 
             <div class="text-block" data-type-effect="true">
-                <p>Nos conocimos en 2024, en una joda, fue lo mas inesperado pero sin saber que algo tan importante iba a empezar ahí.<br>Ese año fue raro… hablábamos, dejábamos de hablar, nada serio.<br>Como si la vida estuviera probándonos.</p>
+                <p>Nos conocimos en 2024, en una joda, fue lo mas inesperado pero sin saber que algo tan importante iba a empezar ahí.<br>Ese año fue raro… habláábamos, dejábamos de hablar, nada serio.<br>Como si la vida estuviera probándonos.</p>
             </div>
 
             <div class="text-block" data-type-effect="true">
@@ -340,7 +325,6 @@
     <section id="final">
         <div class="container">
             <h1 class="final-text">Te amo mucho gordita.</h1>
-            <button class="btn" onclick="handleBtnRestart(this)">Reiniciar camino</button>
         </div>
     </section>
 
@@ -394,19 +378,14 @@
             const startY = window.pageYOffset;
             const diff = targetY - startY;
             let start = null;
-
             const easing = (t) => t < .5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
 
             function step(timestamp) {
                 if (!start) start = timestamp;
                 const progress = timestamp - start;
                 const percent = Math.min(progress / duration, 1);
-                
                 window.scrollTo(0, startY + diff * easing(percent));
-
-                if (progress < duration) {
-                    window.requestAnimationFrame(step);
-                }
+                if (progress < duration) window.requestAnimationFrame(step);
             }
             window.requestAnimationFrame(step);
         }
@@ -419,22 +398,16 @@
             }
         }
 
-        // --- BUTTON HANDLERS ---
         function handleBtnClick(btn, targetId) {
             btn.classList.add('btn-clicked');
-            setTimeout(() => {
-                scrollToId(targetId);
-            }, 500);
+            setTimeout(() => scrollToId(targetId), 500);
         }
 
         function handleBtnRestart(btn) {
             btn.classList.add('btn-clicked');
             setTimeout(() => {
                 cinematicScrollTo(0, 2500);
-                // Opcional: reiniciar estado de los textos para volver a ver el typing
-                setTimeout(() => {
-                    location.reload(); // Forma más limpia de reiniciar toda la experiencia visual
-                }, 2600);
+                setTimeout(() => location.reload(), 2600);
             }, 600);
         }
 
@@ -442,17 +415,12 @@
         async function typeWriter(element) {
             if (element.getAttribute('data-typed') === 'true') return;
             element.setAttribute('data-typed', 'true');
-            
             const originalContent = element.innerHTML;
             element.innerHTML = '';
-            
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = originalContent;
             const nodes = Array.from(tempDiv.childNodes);
-            
-            for (const node of nodes) {
-                await processNode(element, node);
-            }
+            for (const node of nodes) await processNode(element, node);
         }
 
         async function processNode(parent, node) {
@@ -462,7 +430,6 @@
                 const newElement = document.createElement(node.tagName);
                 Array.from(node.attributes).forEach(attr => newElement.setAttribute(attr.name, attr.value));
                 parent.appendChild(newElement);
-                
                 if (newElement.classList.contains('highlight')) {
                     const textContent = node.textContent;
                     newElement.textContent = ''; 
@@ -470,60 +437,41 @@
                         newElement.textContent += textContent[i];
                         await new Promise(resolve => setTimeout(resolve, 60));
                     }
+                } else if (node.tagName === 'BR') {
+                    await new Promise(resolve => setTimeout(resolve, 150));
                 } else {
-                    if (node.tagName === 'BR') {
-                        await new Promise(resolve => setTimeout(resolve, 150));
-                    } else {
-                        const children = Array.from(node.childNodes);
-                        for (const child of children) {
-                            await processNode(newElement, child);
-                        }
-                    }
+                    const children = Array.from(node.childNodes);
+                    for (const child of children) await processNode(newElement, child);
                 }
             }
         }
 
         // --- INTERSECTION OBSERVER ---
-        const observerOptions = {
-            threshold: 0.1
-        };
-
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    
                     if (entry.target.classList.contains('text-block')) {
                         entry.target.classList.add('show');
-                        if (entry.target.dataset.typeEffect === 'true') {
-                            typeWriter(entry.target);
-                        }
+                        if (entry.target.dataset.typeEffect === 'true') typeWriter(entry.target);
                     }
                 }
             });
-        }, observerOptions);
+        }, { threshold: 0.1 });
 
-        // --- INITIALIZATION ---
         window.addEventListener('resize', initStars);
-
         document.addEventListener('DOMContentLoaded', () => {
             initStars();
             drawStars();
-
             document.querySelectorAll('.container').forEach(c => revealObserver.observe(c));
             document.querySelectorAll('.text-block').forEach(b => revealObserver.observe(b));
-
-            setTimeout(() => {
-                document.getElementById('hero-container').classList.add('visible');
-            }, 400);
+            setTimeout(() => document.getElementById('hero-container').classList.add('visible'), 400);
         });
 
-        // Simple Parallax
         if (window.innerWidth > 1024) {
             window.addEventListener('mousemove', (e) => {
                 const x = (e.clientX / window.innerWidth) - 0.5;
                 const y = (e.clientY / window.innerHeight) - 0.5;
-                
                 document.querySelectorAll('.container.visible').forEach(container => {
                     container.style.transform = `translate(${x * 12}px, ${y * 12}px)`;
                 });
