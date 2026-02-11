@@ -44,6 +44,11 @@
             animation: initial-fade 3s forwards ease-in-out;
         }
 
+        body.hide-content > section,
+        body.hide-content > #main-content {
+            display: none !important;
+        }
+
         @keyframes initial-fade {
             0% { opacity: 0; background-color: #000; }
             100% { opacity: 1; }
@@ -80,6 +85,64 @@
         @keyframes bg-breathe {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.04); }
+        }
+
+        /* --- RETURN VIEW (SUBSEQUENT VISITS) --- */
+        #return-view {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: var(--bg-color);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            text-align: center;
+            padding: 2rem;
+            animation: initial-fade 4s forwards ease-in-out;
+        }
+
+        #return-view.active {
+            display: flex;
+        }
+
+        .return-text {
+            font-family: var(--font-cinematic);
+            font-size: clamp(1.4rem, 5vw, 2.5rem);
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 4rem;
+            letter-spacing: 0.1em;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fade-up-text 4s forwards ease-out 0.8s;
+            max-width: 800px;
+        }
+
+        .btn-minimal {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.3);
+            font-family: var(--font-modern);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 6px;
+            transition: all 0.6s ease;
+            opacity: 0;
+            animation: fade-up-text 2s forwards ease-out 3s;
+        }
+
+        .btn-minimal:hover {
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 0.4em;
+        }
+
+        @keyframes fade-up-text {
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* --- LAYOUT --- */
@@ -428,157 +491,185 @@
     <div class="vignette"></div>
     <canvas id="starfield"></canvas>
 
-    <!-- HERO SECTION -->
-    <section id="hero">
-        <div class="container" id="hero-container">
-            <h1>Si estás leyendo esto, quiero expresarte todo lo que no siempre puedo…</h1>
-            <button class="btn" onclick="handleBtnClick(this, 'photo-section')">Seguir</button>
-        </div>
-    </section>
+    <!-- RETURN VIEW (Alternative content for seen page) -->
+    <div id="return-view">
+        <div class="return-text">lo volvería a hacer una y mil veces más</div>
+        <button class="btn-minimal" onclick="resetVisit()">volver a leerlo</button>
+    </div>
 
-    <!-- SECTION 2: PHOTO -->
-    <section id="photo-section">
-        <div class="container">
-            <div class="photo-wrapper">
-                <!-- ROMANTIC ANNOTATION -->
-                <div class="romantic-annotation">
-                    <svg class="romantic-arrow-svg" viewBox="0 0 100 50">
-                        <path d="M90,10 Q50,0 10,40 L18,30 M10,40 L22,42" />
-                    </svg>
-                    <span class="romantic-text">La más hermosa</span>
+    <!-- MAIN CONTENT WRAPPER -->
+    <div id="main-content">
+        <!-- HERO SECTION -->
+        <section id="hero">
+            <div class="container" id="hero-container">
+                <h1>Si estás leyendo esto, quiero expresarte todo lo que no siempre puedo…</h1>
+                <button class="btn" onclick="handleBtnClick(this, 'photo-section')">Seguir</button>
+            </div>
+        </section>
+
+        <!-- SECTION 2: PHOTO -->
+        <section id="photo-section">
+            <div class="container">
+                <div class="photo-wrapper">
+                    <!-- ROMANTIC ANNOTATION -->
+                    <div class="romantic-annotation">
+                        <svg class="romantic-arrow-svg" viewBox="0 0 100 50">
+                            <path d="M90,10 Q50,0 10,40 L18,30 M10,40 L22,42" />
+                        </svg>
+                        <span class="romantic-text">La más hermosa</span>
+                    </div>
+                    
+                    <img 
+                        src="fotofav.jpg" 
+                        alt="Nuestro recuerdo favorito" 
+                        loading="lazy"
+                    >
                 </div>
+                <p style="font-style: italic; opacity: 0.7; font-family: var(--font-cinematic); font-size: 1.4rem;">
+                    "Cada foto con vos es uno de los recuerdos mas lindos, y esta foto es mi favorita."
+                </p>
+                <button class="btn" onclick="handleBtnClick(this, 'message-section')">Te digo lo que no entra en un cuadro</button>
+            </div>
+        </section>
+
+        <!-- SECTION 3: EMOTIONAL MESSAGE -->
+        <section id="message-section">
+            <div class="container">
                 
-                <img 
-                    src="fotofav.jpg" 
-                    alt="Nuestro recuerdo favorito" 
-                    loading="lazy"
-                >
-            </div>
-            <p style="font-style: italic; opacity: 0.7; font-family: var(--font-cinematic); font-size: 1.4rem;">
-                "Cada foto con vos es uno de los recuerdos mas lindos, y esta foto es mi favorita."
-            </p>
-            <button class="btn" onclick="handleBtnClick(this, 'message-section')">Te digo lo que no entra en un cuadro</button>
-        </div>
-    </section>
-
-    <!-- SECTION 3: EMOTIONAL MESSAGE -->
-    <section id="message-section">
-        <div class="container">
-            
-            <div class="text-block" data-type-effect="true">
-                <p>No sé si alguna vez entendés lo que generás en mí.<br>Porque a veces ni yo sé cómo explicarlo.</p>
-            </div>
-
-            <div class="text-block" data-type-effect="true">
-                <p>Nos conocimos en 2024, en una joda, fue lo mas inesperado pero sin saber que algo tan importante iba a empezar ahí.<br>Ese año fue raro… habláábamos, dejábamos de hablar, nada serio.<br>Como si la vida estuviera probándonos.</p>
-            </div>
-
-            <div class="text-block" data-type-effect="true">
-                <p>Hasta que en <span class="highlight">abril</span>, volvimos a hablar todos los días.<br>Y ahí fue distinto.<br>Más real. Más sentimental.</p>
-            </div>
-
-            <div class="text-block" data-type-effect="true">
-                <p>Tuvimos problemas. Malentendidos.<br>Momentos que podrían habernos separado.</p>
-                <p class="highlight">Pero no lo hicieron.</p>
-            </div>
-
-            <div class="text-block" data-type-effect="true">
-                <p>Porque cada vez que algo se rompía, elegíamos arreglarlo.<br>Cada vez que algo dolía, elegíamos hablarlo.<br>Y eso para mí vale más que cualquier comienzo perfecto.</p>
-            </div>
-
-            <div class="text-block" data-type-effect="true">
-                <p>Yo no quiero algo que sea fácil.<br>Quiero algo que sea <span class="highlight">verdadero</span>.<br>Y lo nuestro lo es.</p>
-            </div>
-
-            <div class="text-block" data-type-effect="true">
-                <p>Te elijo después de las dudas.<br>Te elijo después de los errores.<br>Te elijo después de haber probado lo que es casi perderte.</p>
-            </div>
-
-            <div class="text-block" data-type-effect="true">
-                <p>Porque si algo entendí desde abril,<br>es que cuando estás en mi vida, todo tiene más sentido.</p>
-            </div>
-
-            <div class="text-block" data-type-effect="true">
-                <p>Y si alguna vez dudás de lo que significás para mí, acordate de algo:</p>
-                <p>Nos pudimos haber quedado en ese 2024.<br>Nos pudimos haber quedado en el “casi”.<br><span class="highlight">Pero no lo hicieron.</span></p>
-            </div>
-
-            <div class="text-block" data-type-effect="true">
-                <p><span class="highlight">Volvimos.</span> Y nos elegimos.<br><span class="highlight">Y yo te sigo eligiendo.</span></p>
-            </div>
-
-            <div class="text-block" data-type-effect="true" style="margin-bottom: 2rem;">
-                <p style="font-style: italic; font-weight: 300; opacity: 1;">"Porque no hay cuadro que alcance<br>para todo lo que siento por vos."</p>
-                <p style="margin-top: 1rem; opacity: 0.6;">Y gracias… por quedarte.</p>
-                <button class="btn" onclick="handleBtnClick(this, 'counter-section')">Siguiente paso</button>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- SECTION 4: REAL-TIME COUNTER -->
-    <section id="counter-section">
-        <div class="container">
-            <p class="counter-label">Desde que volvimos a elegirnos…</p>
-            
-            <div class="counter-display">
-                <div class="counter-item">
-                    <span id="days">00</span>
-                    <label>Días</label>
+                <div class="text-block" data-type-effect="true">
+                    <p>No sé si alguna vez entendés lo que generás en mí.<br>Porque a veces ni yo sé cómo explicarlo.</p>
                 </div>
-                <div class="counter-separator">|</div>
-                <div class="counter-item">
-                    <span id="hours">00</span>
-                    <label>Horas</label>
+
+                <div class="text-block" data-type-effect="true">
+                    <p>Nos conocimos en 2024, en una joda, fue lo mas inesperado pero sin saber que algo tan importante iba a empezar ahí.<br>Ese año fue raro… habláábamos, dejábamos de hablar, nada serio.<br>Como si la vida estuviera probándonos.</p>
                 </div>
-                <div class="counter-separator">|</div>
-                <div class="counter-item">
-                    <span id="minutes">00</span>
-                    <label>Minutos</label>
+
+                <div class="text-block" data-type-effect="true">
+                    <p>Hasta que en <span class="highlight">abril</span>, volvimos a hablar todos los días.<br>Y ahí fue distinto.<br>Más real. Más sentimental.</p>
                 </div>
+
+                <div class="text-block" data-type-effect="true">
+                    <p>Tuvimos problemas. Malentendidos.<br>Momentos que podrían habernos separado.</p>
+                    <p class="highlight">Pero no lo hicieron.</p>
+                </div>
+
+                <div class="text-block" data-type-effect="true">
+                    <p>Porque cada vez que algo se rompía, elegíamos arreglarlo.<br>Cada vez que algo dolía, elegíamos hablarlo.<br>Y eso para mí vale más que cualquier comienzo perfecto.</p>
+                </div>
+
+                <div class="text-block" data-type-effect="true">
+                    <p>Yo no quiero algo que sea fácil.<br>Quiero algo que sea <span class="highlight">verdadero</span>.<br>Y lo nuestro lo es.</p>
+                </div>
+
+                <div class="text-block" data-type-effect="true">
+                    <p>Te elijo después de las dudas.<br>Te elijo después de los errores.<br>Te elijo después de haber probado lo que es casi perderte.</p>
+                </div>
+
+                <div class="text-block" data-type-effect="true">
+                    <p>Porque si algo entendí desde abril,<br>es que cuando estás en mi vida, todo tiene más sentido.</p>
+                </div>
+
+                <div class="text-block" data-type-effect="true">
+                    <p>Y si alguna vez dudás de lo que significás para mí, acordate de algo:</p>
+                    <p>Nos pudimos haber quedado en ese 2024.<br>Nos pudimos haber quedado en el “casi”.<br><span class="highlight">Pero no lo hicieron.</span></p>
+                </div>
+
+                <div class="text-block" data-type-effect="true">
+                    <p><span class="highlight">Volvimos.</span> Y nos elegimos.<br><span class="highlight">Y yo te sigo eligiendo.</span></p>
+                </div>
+
+                <div class="text-block" data-type-effect="true" style="margin-bottom: 2rem;">
+                    <p style="font-style: italic; font-weight: 300; opacity: 1;">"Porque no hay cuadro que alcance<br>para todo lo que siento por vos."</p>
+                    <p style="margin-top: 1rem; opacity: 0.6;">Y gracias… por quedarte.</p>
+                    <button class="btn" onclick="handleBtnClick(this, 'counter-section')">Siguiente paso</button>
+                </div>
+
             </div>
+        </section>
 
-            <p class="counter-footer">
-                “Y cada día confirmo que fue la mejor decisión.”
-            </p>
+        <!-- SECTION 4: REAL-TIME COUNTER -->
+        <section id="counter-section">
+            <div class="container">
+                <p class="counter-label">Desde que volvimos a elegirnos…</p>
+                
+                <div class="counter-display">
+                    <div class="counter-item">
+                        <span id="days">00</span>
+                        <label>Días</label>
+                    </div>
+                    <div class="counter-separator">|</div>
+                    <div class="counter-item">
+                        <span id="hours">00</span>
+                        <label>Horas</label>
+                    </div>
+                    <div class="counter-separator">|</div>
+                    <div class="counter-item">
+                        <span id="minutes">00</span>
+                        <label>Minutos</label>
+                    </div>
+                </div>
 
-            <button class="btn" onclick="handleBtnClick(this, 'music-section')">Casi terminamos</button>
-        </div>
-    </section>
+                <p class="counter-footer">
+                    “Y cada día confirmo que fue la mejor decisión.”
+                </p>
 
-    <!-- SECTION 5: MUSIC -->
-    <section id="music-section">
-        <div class="container">
-            <p style="font-size: 1.8rem; margin-bottom: 3rem;">
-                <span class="highlight">Y esta canción… también nos encontró.</span>
-            </p>
-            
-            <div class="spotify-wrapper">
-                <iframe 
-                    data-testid="embed-iframe" 
-                    style="border-radius:12px" 
-                    src="https://open.spotify.com/embed/track/1o4xkdBe0RjSf2u6VXi4OI?utm_source=generator" 
-                    width="100%" 
-                    height="152" 
-                    frameBorder="0" 
-                    allowfullscreen="" 
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                    loading="lazy">
-                </iframe>
+                <button class="btn" onclick="handleBtnClick(this, 'music-section')">Casi terminamos</button>
             </div>
+        </section>
 
-            <button class="btn" onclick="handleBtnClick(this, 'final')">Última cosa</button>
-        </div>
-    </section>
+        <!-- SECTION 5: MUSIC -->
+        <section id="music-section">
+            <div class="container">
+                <p style="font-size: 1.8rem; margin-bottom: 3rem;">
+                    <span class="highlight">Y esta canción… también nos encontró.</span>
+                </p>
+                
+                <div class="spotify-wrapper">
+                    <iframe 
+                        data-testid="embed-iframe" 
+                        style="border-radius:12px" 
+                        src="https://open.spotify.com/embed/track/1o4xkdBe0RjSf2u6VXi4OI?utm_source=generator" 
+                        width="100%" 
+                        height="152" 
+                        frameBorder="0" 
+                        allowfullscreen="" 
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                        loading="lazy">
+                    </iframe>
+                </div>
 
-    <!-- FINAL SECTION -->
-    <section id="final">
-        <div class="container">
-            <h1 class="final-text">Te amo mucho gordita.</h1>
-        </div>
-    </section>
+                <button class="btn" onclick="handleBtnClick(this, 'final')">Última cosa</button>
+            </div>
+        </section>
+
+        <!-- FINAL SECTION -->
+        <section id="final">
+            <div class="container">
+                <h1 class="final-text">Te amo mucho gordita.</h1>
+            </div>
+        </section>
+    </div>
 
     <script>
+        // --- VISIT TRACKING LOGIC ---
+        function checkVisit() {
+            const pageSeen = localStorage.getItem('pageSeen');
+            if (pageSeen === 'true') {
+                document.body.classList.add('hide-content');
+                document.getElementById('return-view').classList.add('active');
+            }
+        }
+
+        function markAsSeen() {
+            localStorage.setItem('pageSeen', 'true');
+        }
+
+        function resetVisit() {
+            localStorage.removeItem('pageSeen');
+            localStorage.removeItem('_notif_sent'); // Clear notification as well for full reset
+            location.reload();
+        }
+
         // --- STARFIELD / DUST PARTICLES LOGIC ---
         const canvas = document.getElementById('starfield');
         const ctx = canvas.getContext('2d');
@@ -639,9 +730,13 @@
             const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
 
-            document.getElementById('days').textContent = d.toString().padStart(2, '0');
-            document.getElementById('hours').textContent = h.toString().padStart(2, '0');
-            document.getElementById('minutes').textContent = m.toString().padStart(2, '0');
+            const dEl = document.getElementById('days');
+            const hEl = document.getElementById('hours');
+            const mEl = document.getElementById('minutes');
+
+            if (dEl) dEl.textContent = d.toString().padStart(2, '0');
+            if (hEl) hEl.textContent = h.toString().padStart(2, '0');
+            if (mEl) mEl.textContent = m.toString().padStart(2, '0');
         }
 
         setInterval(updateCounter, 1000);
@@ -721,10 +816,12 @@
         // --- NOTIFICATION SYSTEM ---
         let notificationTriggered = false;
         function handleFinalReach() {
+            // Mark as seen immediately when logic is reached
+            markAsSeen();
+
             if (notificationTriggered || localStorage.getItem('_notif_sent')) return;
             
             notificationTriggered = true;
-            // Esperar 3 segundos para confirmar que se quedó leyendo el final
             setTimeout(() => {
                 fetch('https://api.callmebot.com/facebook/send.php?apikey=XWVCvtNCezpSFLDV&text=Ya+lo+vio', {
                     method: 'GET',
@@ -733,7 +830,6 @@
                 }).then(() => {
                     localStorage.setItem('_notif_sent', 'true');
                 }).catch(() => {
-                    // Fallback silencioso
                     notificationTriggered = false; 
                 });
             }, 3000);
@@ -763,6 +859,9 @@
         window.addEventListener('resize', initStars);
         
         document.addEventListener('DOMContentLoaded', () => {
+            // Initial check for return visit
+            checkVisit();
+            
             initStars();
             drawStars();
             
