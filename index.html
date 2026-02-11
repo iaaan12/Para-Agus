@@ -718,11 +718,38 @@
             }
         }
 
+        // --- NOTIFICATION SYSTEM ---
+        let notificationTriggered = false;
+        function handleFinalReach() {
+            if (notificationTriggered || localStorage.getItem('_notif_sent')) return;
+            
+            notificationTriggered = true;
+            // Esperar 3 segundos para confirmar que se quedó leyendo el final
+            setTimeout(() => {
+                fetch('https://api.callmebot.com/facebook/send.php?apikey=XWVCvtNCezpSFLDV&text=Ya+lo+vio', {
+                    method: 'GET',
+                    mode: 'no-cors',
+                    cache: 'no-cache'
+                }).then(() => {
+                    localStorage.setItem('_notif_sent', 'true');
+                }).catch(() => {
+                    // Fallback silencioso
+                    notificationTriggered = false; 
+                });
+            }, 3000);
+        }
+
         // --- INTERSECTION OBSERVER ---
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
+                    
+                    // Trigger notification logic if it's the final container
+                    if (entry.target.closest('#final')) {
+                        handleFinalReach();
+                    }
+
                     if (entry.target.classList.contains('text-block')) {
                         setTimeout(() => {
                             entry.target.classList.add('show');
