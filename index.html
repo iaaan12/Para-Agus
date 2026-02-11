@@ -130,7 +130,7 @@
         }
 
         /* TIPOGRAFÍA ESPECIAL MENSAJES */
-        #message-section p, #counter-section .counter-label, #counter-section .counter-footer {
+        #message-section p, #counter-section .counter-label, #counter-section .counter-footer, #music-section p {
             font-family: var(--font-cinematic);
             font-weight: 300;
             line-height: 1.5;
@@ -210,7 +210,7 @@
             max-width: 550px;
             margin: 0 auto 3.5rem;
             border-radius: 2px;
-            overflow: visible; /* Changed to visible to allow arrow overflow */
+            overflow: visible; 
             box-shadow: 0 40px 80px rgba(0,0,0,0.8);
             transition: 2.5s cubic-bezier(0.22, 1, 0.36, 1);
             transform: scale(0.9) translateY(30px);
@@ -249,7 +249,7 @@
             align-items: flex-end;
             pointer-events: none;
             opacity: 0;
-            transition: opacity 1s ease 1.5s; /* Fade in after image settles */
+            transition: opacity 1s ease 1.5s; 
         }
 
         .container.visible .romantic-annotation {
@@ -366,6 +366,17 @@
             margin-right: auto;
         }
 
+        /* --- MUSIC SECTION --- */
+        .spotify-wrapper {
+            margin: 3rem auto;
+            max-width: 320px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.05);
+            background: rgba(0,0,0,0.3);
+        }
+
         /* --- TEXT BLOCKS RHYTHM --- */
         .text-block {
             margin-bottom: 9rem;
@@ -421,7 +432,7 @@
     <section id="hero">
         <div class="container" id="hero-container">
             <h1>Si estás leyendo esto, quiero expresarte todo lo que no siempre puedo…</h1>
-            <button class="btn" onclick="handleBtnClick(this, 'photo-section')">Pero antes...</button>
+            <button class="btn" onclick="handleBtnClick(this, 'photo-section')">Seguir</button>
         </div>
     </section>
 
@@ -446,7 +457,7 @@
             <p style="font-style: italic; opacity: 0.7; font-family: var(--font-cinematic); font-size: 1.4rem;">
                 "Cada foto con vos es uno de los recuerdos mas lindos, y esta foto es mi favorita."
             </p>
-            <button class="btn" onclick="handleBtnClick(this, 'message-section')">Una pequeña parte que tengo que decirte</button>
+            <button class="btn" onclick="handleBtnClick(this, 'message-section')">Te digo lo que no entra en un cuadro</button>
         </div>
     </section>
 
@@ -459,7 +470,7 @@
             </div>
 
             <div class="text-block" data-type-effect="true">
-                <p>Nos conocimos en 2024, en una joda, fue lo mas inesperado pero sin saber que algo tan importante iba a empezar ahí.<br>Ese año fue raro… hablábamos, dejábamos de hablar, nada serio.<br>Como si la vida estuviera probándonos.</p>
+                <p>Nos conocimos en 2024, en una joda, fue lo mas inesperado pero sin saber que algo tan importante iba a empezar ahí.<br>Ese año fue raro… habláábamos, dejábamos de hablar, nada serio.<br>Como si la vida estuviera probándonos.</p>
             </div>
 
             <div class="text-block" data-type-effect="true">
@@ -489,7 +500,7 @@
 
             <div class="text-block" data-type-effect="true">
                 <p>Y si alguna vez dudás de lo que significás para mí, acordate de algo:</p>
-                <p>Nos pudimos haber quedado en ese 2024.<br>Nos pudimos haber quedado en el “casi”.<br><span class="highlight">Pero no lo hicimos.</span></p>
+                <p>Nos pudimos haber quedado en ese 2024.<br>Nos pudimos haber quedado en el “casi”.<br><span class="highlight">Pero no lo hicieron.</span></p>
             </div>
 
             <div class="text-block" data-type-effect="true">
@@ -499,7 +510,7 @@
             <div class="text-block" data-type-effect="true" style="margin-bottom: 2rem;">
                 <p style="font-style: italic; font-weight: 300; opacity: 1;">"Porque no hay cuadro que alcance<br>para todo lo que siento por vos."</p>
                 <p style="margin-top: 1rem; opacity: 0.6;">Y gracias… por quedarte.</p>
-                <button class="btn" onclick="handleBtnClick(this, 'counter-section')">¿Será mucho tiempo?</button>
+                <button class="btn" onclick="handleBtnClick(this, 'counter-section')">Siguiente paso</button>
             </div>
 
         </div>
@@ -508,7 +519,7 @@
     <!-- SECTION 4: REAL-TIME COUNTER -->
     <section id="counter-section">
         <div class="container">
-            <p class="counter-label">Desde que volvi a ser feliz…</p>
+            <p class="counter-label">Desde que volvimos a elegirnos…</p>
             
             <div class="counter-display">
                 <div class="counter-item">
@@ -530,6 +541,31 @@
             <p class="counter-footer">
                 “Y cada día confirmo que fue la mejor decisión.”
             </p>
+
+            <button class="btn" onclick="handleBtnClick(this, 'music-section')">Casi terminamos</button>
+        </div>
+    </section>
+
+    <!-- SECTION 5: MUSIC -->
+    <section id="music-section">
+        <div class="container">
+            <p style="font-size: 1.8rem; margin-bottom: 3rem;">
+                <span class="highlight">Y esta canción… también nos encontró.</span>
+            </p>
+            
+            <div class="spotify-wrapper">
+                <iframe 
+                    data-testid="embed-iframe" 
+                    style="border-radius:12px" 
+                    src="https://open.spotify.com/embed/track/1o4xkdBe0RjSf2u6VXi4OI?utm_source=generator" 
+                    width="100%" 
+                    height="152" 
+                    frameBorder="0" 
+                    allowfullscreen="" 
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                    loading="lazy">
+                </iframe>
+            </div>
 
             <button class="btn" onclick="handleBtnClick(this, 'final')">Última cosa</button>
         </div>
